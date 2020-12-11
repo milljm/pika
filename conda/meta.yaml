@@ -1,0 +1,57 @@
+{% set build = pr_num %}
+{% set strbuild = "build_" + build|string %}
+{% set version = "2020.12.15" %}
+
+package:
+  name: pika-opt
+  version: {{ version }}
+
+source:
+  path: ../../not_pika
+
+build:
+  number: {{ build }}  # [linux,osx]
+  string: {{ strbuild }}
+  skip: true # [win]
+
+requirements:
+  build:
+    - moose-mpich       {{ moose_mpich }}
+    - moose-libmesh-vtk {{ moose_libmesh_vtk }}
+    - libpng            {{ libpng }}
+    - cctools                                           # [osx]
+    - ld64                                              # [osx]
+    - pkg-config
+
+  host:
+    - cmake
+    - moose-mpich       {{ moose_mpich }}
+    - libblas           {{ libblas }}                   # [osx]
+    - libcblas          {{ libcblas }}                  # [osx]
+    - liblapack         {{ liblapack }}                 # [osx]
+    - libopenblas       {{ libopenblas }}               # [osx]
+
+  run:
+    - cmake
+    - moose-mpich       {{ moose_mpich }}
+    - moose-libmesh-vtk {{ moose_libmesh_vtk }}
+    - libblas           {{ libblas }}                   # [osx]
+    - libcblas          {{ libcblas }}                  # [osx]
+    - liblapack         {{ liblapack }}                 # [osx]
+    - libopenblas       {{ libopenblas }}               # [osx]
+    - libnetcdf         {{ netcdf }}                    # [linux]
+    - libpng            {{ libpng }}
+    - pkg-config
+
+test:
+  commands:
+    - test -f $PREFIX/pika/bin/pika-opt
+
+about:
+  home: https://mooseframework.org/
+  license: LGPL 2.1
+  summary: 'The Multiphysics Object-Oriented Simulation Environment (MOOSE) is a finite-element, multiphysics framework primarily developed by Idaho National Laboratory. This superficial module (moose) if a future placeholder for binary releases of MOOSE.'
+
+extra:
+  recipe-maintainers:
+    - milljm
